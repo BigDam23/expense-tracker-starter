@@ -15,16 +15,24 @@ No test framework is configured.
 
 ## Architecture
 
-Single-component React app (`src/App.jsx`). All state, filtering logic, and rendering live in one `App` component — no child components exist yet. State consists of:
+React + Vite app composed of four components. `App` owns the shared `transactions` state and passes it down; each child owns only what is private to it.
 
-- `transactions` — array of `{ id, description, amount, type, category, date }` objects
-- Form fields: `description`, `amount`, `type`, `category`
-- Filter fields: `filterType`, `filterCategory`
+```
+App
+├── Summary          — calculates and displays totalIncome, totalExpenses, balance
+├── TransactionForm  — owns form state; calls onAdd(transaction) on submit
+└── TransactionList  — owns filter state; receives transactions and filters locally
+```
 
-The `amount` field is stored as a **string** (from the input's `value`), but the `totalIncome`/`totalExpenses` reducers use it in arithmetic without converting to a number — this is the intentional bug in the starter.
+**State ownership:**
+- `App` — `transactions: { id, description, amount, type, category, date }[]`. `amount` is always a number.
+- `TransactionForm` — `description`, `amount`, `type`, `category` (reset after submit)
+- `TransactionList` — `filterType`, `filterCategory`
 
-`App.css` defines a `.delete-btn` style but no delete functionality exists in the JSX yet.
+`categories` is a local constant duplicated in `TransactionForm` and `TransactionList` (not yet shared).
+
+`App.css` defines a `.delete-btn` style but no delete functionality exists yet.
 
 ## Course context
 
-This is the starter project for a Claude Code course (codewithmosh.com). It intentionally ships with a bug (`amount` string vs. number), a minimal UI, and all code in a single file — these are meant to be fixed/improved as course exercises.
+This is the starter project for a Claude Code course (codewithmosh.com). It ships with a minimal UI and is meant to be built out through course exercises.
